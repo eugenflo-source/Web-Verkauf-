@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Sitemap – diek-abriss.de
+  Hinweis: One-Page-Website. Google ignoriert #Anker in Sitemaps, daher ist die
+  Startseite (mit allen Sektionen #leistungen, #ablauf, #referenzen, #preise,
+  #einsatzgebiet, #kontakt, #faq) der einzige indexierbare Eintrag.
+  Impressum/Datenschutz sind bewusst noindex und daher nicht enthalten.
+  <lastmod> bei jeder inhaltlichen Änderung aktualisieren.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://diek-abriss.de/</loc>
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://diek-abriss.de/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://diek-abriss.de/"/>
+    <lastmod>2026-09-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+    <image:image><image:loc>https://diek-abriss.de/assets/img/hero.jpg</image:loc></image:image>
+    <image:image><image:loc>https://diek-abriss.de/assets/img/leistung-abriss.jpg</image:loc></image:image>
+    <image:image><image:loc>https://diek-abriss.de/assets/img/leistung-entruempelung.jpg</image:loc></image:image>
+    <image:image><image:loc>https://diek-abriss.de/assets/img/leistung-demontage.jpg</image:loc></image:image>
+    <image:image><image:loc>https://diek-abriss.de/assets/img/leistung-entsorgung.jpg</image:loc></image:image>
+    <image:image><image:loc>https://diek-abriss.de/assets/img/vorher.jpg</image:loc></image:image>
+    <image:image><image:loc>https://diek-abriss.de/assets/img/nachher.jpg</image:loc></image:image>
+  </url>
+</urlset>
