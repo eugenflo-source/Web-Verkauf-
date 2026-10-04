@@ -67,7 +67,8 @@ Anfragen findest du anschließend in der Tabelle `inquiries`. Für E-Mail-Benach
 
 ## Deployment auf Vercel
 
-1. Repository bei Vercel importieren (Framework wird automatisch erkannt).
+1. Repository bei Vercel importieren. Das Framework ist über `vercel.json` fest auf Next.js eingestellt – auch wenn das Vercel-Projekt angelegt wurde, als das Repo noch leer war.
+   **Hobby-Plan:** Vercel baut nur Commits, deren Git-Autor zu deinem Vercel-Konto gehört. Commits von Claude (Autor „Claude“) werden dort als „Error“ abgelehnt. Führe solche Änderungen über einen Pull Request in `main` zusammen – der Merge-Commit stammt dann von dir und wird gebaut.
 2. Umgebungsvariablen aus `.env.example` eintragen.
 3. Nach dem ersten Deployment `NEXT_PUBLIC_SITE_URL` auf die finale Domain setzen und Stripe-Webhook sowie Supabase-Redirect-URL darauf anpassen.
 4. `NEXT_PUBLIC_ALLOW_INDEXING=true` erst setzen, wenn alle Platzhalter und Rechtstexte ersetzt sind (bis dahin `noindex`).
