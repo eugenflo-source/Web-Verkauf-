@@ -16,7 +16,7 @@ Statisches HTML/CSS/JS, kein Build-Schritt nötig. Einfach den gesamten Ordner a
 | `script.js` | Lenis Smooth Scroll, GSAP/ScrollTrigger, Intersection Observer, Rechner, Formular, Consent |
 | `config.js` | **Supabase-Zugang + GA4/GTM-IDs** |
 | `impressum.html`, `datenschutz.html`, `404.html` | Unterseiten im neuen Design |
-| `anfragen.html` + `admin.css` | Interner Bereich (unverändert, Supabase lokal eingebunden) |
+| `anfragen.html` + `admin.css` | Interner Bereich aus dem aktuellen Stand (Aufträge + „Website-Funktionen“), Supabase lokal eingebunden |
 | `robots.txt`, `sitemap.xml`, `manifest.webmanifest` | SEO / PWA |
 | `favicon.ico`, `favicon.svg`, `apple-touch-icon.png`, `assets/icons/*` | Favicons (16/32/48/180/192/512 + maskable) |
 | `.htaccess` | HTTPS/non-www-Redirect, gzip, Caching, Security-Header, 404 |
@@ -28,11 +28,9 @@ Statisches HTML/CSS/JS, kein Build-Schritt nötig. Einfach den gesamten Ordner a
    - `hero` 2000×1250 + `hero-m` 900×563 – Einsatzfoto, dunkel/kontrastreich
    - `leistung-abriss|entruempelung|demontage|entsorgung` 1200×900
    - `warum-diek` 1100×1400 (Hochformat, Inhaber/Team)
-   - `vorher` / `nachher` 1600×1000 (gleiche Perspektive!)
-   - `ref-wohnung|kueche|bad|garten|fliesen|keller` 900×1100
    - `og-image.jpg` 1200×630 (Social-Media-Vorschau; aktuelle Version kann bleiben)
-2. **Kundenstimmen:** Musterbewertungen durch echte ersetzen oder Sektion entfernen (Kommentar in `index.html`).
-3. **FAQ-Antworten** vom Betrieb prüfen lassen – bei Änderungen auch das FAQPage-JSON-LD im `<head>` anpassen.
+2. **`supabase.sql` erneut ausführen** (legt `site_settings` an, falls noch nicht geschehen) und eine Testanfrage senden.
+3. **Inhalte pflegen:** Hero-Texte, Kontaktdaten, Einsatzgebiet, FAQ und alle Preise werden im internen Bereich unter „Website-Funktionen“ geändert – die Seite übernimmt sie beim Laden automatisch (inkl. FAQ- und Kontakt-Daten im JSON-LD). Die Werte in `index.html` sind nur Standardwerte, falls Supabase nicht erreichbar ist.
 4. **Hero-Kennzahlen** (4 / 21 / 0 € / 100 %) ggf. anpassen.
 5. **Tracking (optional):** In `config.js` `ga4Id` und/oder `gtmId` eintragen → Consent-Banner erscheint automatisch, Google lädt erst nach Zustimmung (Consent Mode v2). Datenschutzerklärung Abschnitt 7 ergänzen.
 6. **Search Console:** Verifizierungs-Meta-Tag im `<head>` von `index.html` einkommentieren und Code eintragen, danach `sitemap.xml` einreichen.
@@ -50,6 +48,9 @@ Werte mit den Platzhalterbildern gemessen; echte Fotos gut komprimieren (AVIF �
 
 ## Technik-Notizen
 - Supabase-Bibliothek wird erst beim ersten Fokus ins Formular nachgeladen (spart ~200 KB beim Seitenaufruf). Die Datenstruktur für `contact_requests` ist unverändert.
-- Ohne Supabase-Konfiguration: Demo-Modus (Anfragen im Browser-Speicher, sichtbar in `anfragen.html`).
+- Website-Einstellungen (`site_settings`, key `site`) werden per schlankem REST-Aufruf geladen; nur geänderte Inhalte werden ersetzt (kein Flackern). Validierung/Grenzen wie bisher (max. 15 FAQ, 60 Orte, Preise 0–100.000 €).
+- Der Preisrechner erkennt „Mit Entsorgung“ über den Schlüssel, nicht über den Betrag – funktioniert also auch bei 0 € Zuschlag.
+- Einsatzkarte: Orte, die im internen Bereich entfernt werden, verschwinden auch von der Karte. Neue Orte erscheinen in der Liste; für einen Kartenpunkt im SVG in `index.html` eine Position (km relativ zu Augsburg) ergänzen.
+- Max. 10 Fotos pro Anfrage. Ohne Supabase wird keine Anfrage gespeichert, sondern auf Telefon/WhatsApp verwiesen.
 - `prefers-reduced-motion` schaltet Lenis, Parallax, Ticker, Pulse und Reveals ab.
 - Preisrechner-Formel wie bisher: 400 € + Objekt + Aufwand + Entsorgung (+ Material), auf 10 € gerundet. „Anfrage senden“ übernimmt die Auswahl ins Formular.

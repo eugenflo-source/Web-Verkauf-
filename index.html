@@ -65,7 +65,7 @@
 <link rel="preload" as="image" type="image/avif" fetchpriority="high"
       imagesrcset="assets/img/hero-m.avif 900w, assets/img/hero.avif 2000w" imagesizes="100vw">
 
-<link rel="stylesheet" href="style.css?v=3.0.0">
+<link rel="stylesheet" href="style.css?v=3.1.0">
 
 <!-- Theme vor dem ersten Paint setzen (verhindert Flackern) -->
 <script>
@@ -86,7 +86,7 @@
      ============================================================ -->
 
 <!-- Strukturierte Daten (JSON-LD) -->
-<script type="application/ld+json">
+<script type="application/ld+json" id="ld-json">
 {
   "@context": "https://schema.org",
   "@graph": [
@@ -212,14 +212,11 @@
       "@type": "FAQPage",
       "@id": "https://diek-abriss.de/#faq",
       "mainEntity": [
-        { "@type": "Question", "name": "Was kostet ein Abriss oder eine Entrümpelung?", "acceptedAnswer": { "@type": "Answer", "text": "Der Preis hängt vom Umfang, dem Zugang, dem Material und der Entsorgung ab. Die Schnelleinschätzung auf dieser Seite gibt eine erste, unverbindliche Orientierung. Ein verbindliches, transparentes Angebot erhalten Sie nach der Einschätzung anhand Ihrer Fotos oder einer Besichtigung." } },
-        { "@type": "Question", "name": "Ist die Anfrage kostenlos?", "acceptedAnswer": { "@type": "Answer", "text": "Ja. Ihre Anfrage und unsere Einschätzung sind kostenlos und unverbindlich. Leistungsumfang und Preis werden vor Beginn klar besprochen." } },
-        { "@type": "Question", "name": "Muss vorher jemand vor Ort besichtigen?", "acceptedAnswer": { "@type": "Answer", "text": "Oft reichen aussagekräftige Fotos, die Sie direkt über das Formular oder per WhatsApp senden können. Alternativ vereinbaren wir gerne eine Besichtigung vor Ort." } },
-        { "@type": "Question", "name": "Übernehmen Sie auch die Entsorgung?", "acceptedAnswer": { "@type": "Answer", "text": "Ja. Auf Wunsch übernehmen wir den Abtransport und die fachgerechte Entsorgung der anfallenden Materialien, zum Beispiel Sperrmüll, Holz, gemischte Abfälle, Bauschutt und Grünschnitt." } },
-        { "@type": "Question", "name": "Wie schnell bekomme ich einen Termin?", "acceptedAnswer": { "@type": "Answer", "text": "Wir melden uns schnellstmöglich nach Ihrer Anfrage und stimmen einen Termin ab, der zu Ihrem Vorhaben passt. Kurzfristige Einsätze sind nach Absprache möglich." } },
-        { "@type": "Question", "name": "In welchem Gebiet sind Sie im Einsatz?", "acceptedAnswer": { "@type": "Answer", "text": "Wir sind in Augsburg und vielen Orten der Umgebung unterwegs, unter anderem in Friedberg, Mering, Königsbrunn, Gersthofen, Neusäß, Stadtbergen, Aichach, Bobingen, Kissing, Diedorf, Schwabmünchen, Meitingen, Landsberg am Lech, Fürstenfeldbruck, Dachau, Wertingen, Günzburg, Burgau, Thannhausen und Mindelheim." } },
-        { "@type": "Question", "name": "In welchem Zustand wird die Fläche übergeben?", "acceptedAnswer": { "@type": "Answer", "text": "Besenrein. Nach der Arbeit bleibt die Fläche ordentlich und bereit für den nächsten Schritt – ob Renovierung, Übergabe oder Neubezug." } },
-        { "@type": "Question", "name": "Arbeiten Sie für Privat- und Gewerbekunden?", "acceptedAnswer": { "@type": "Answer", "text": "Ja. Wir arbeiten in Wohnungen, Häusern, Kellern, Garagen, Gärten sowie in Gewerberäumen und auf Baustellen – mit einem persönlichen Ansprechpartner statt einer anonymen Vermittlungsplattform." } }
+        { "@type": "Question", "name": "Welche Arbeiten übernehmen Sie?", "acceptedAnswer": { "@type": "Answer", "text": "Wir unterstützen bei Abriss, Entrümpelung, Demontage, Rückbau und Entsorgung – für Wohnungen, Häuser, Keller, Gärten, Gewerbe und Baustellen." } },
+        { "@type": "Question", "name": "Wie kann ich eine Anfrage stellen?", "acceptedAnswer": { "@type": "Answer", "text": "Sie können das Anfrageformular nutzen, uns anrufen oder direkt per WhatsApp schreiben. Fotos helfen uns bei einer schnellen Einschätzung." } },
+        { "@type": "Question", "name": "Kann ich Fotos mit meiner Anfrage senden?", "acceptedAnswer": { "@type": "Answer", "text": "Ja. Sie können direkt mit der Kamera ein Foto aufnehmen oder bis zu zehn Fotos aus Ihrer Galerie beziehungsweise Ihren Dateien auswählen." } },
+        { "@type": "Question", "name": "Übernehmen Sie auch die Entsorgung?", "acceptedAnswer": { "@type": "Answer", "text": "Ja. Wenn Sie Entsorgung auswählen, berücksichtigen wir den Abtransport und die fachgerechte Entsorgung in der Einschätzung." } },
+        { "@type": "Question", "name": "In welchem Gebiet sind Sie tätig?", "acceptedAnswer": { "@type": "Answer", "text": "Wir sind in Augsburg und vielen Orten in der Umgebung unterwegs. Die aktuellen Einsatzorte finden Sie direkt auf dieser Seite." } }
       ]
     }
   ]
@@ -253,7 +250,6 @@
     <nav class="nav__links" aria-label="Hauptnavigation">
       <a href="#leistungen">Leistungen</a>
       <a href="#ablauf">Ablauf</a>
-      <a href="#referenzen">Referenzen</a>
       <a href="#preise">Preise</a>
       <a href="#einsatzgebiet">Einsatzgebiet</a>
       <a href="#faq">FAQ</a>
@@ -280,11 +276,10 @@
   <nav aria-label="Mobile Navigation">
     <a href="#leistungen"><small>01</small>Leistungen</a>
     <a href="#ablauf"><small>02</small>Ablauf</a>
-    <a href="#referenzen"><small>03</small>Referenzen</a>
-    <a href="#preise"><small>04</small>Preise</a>
-    <a href="#einsatzgebiet"><small>05</small>Einsatzgebiet</a>
+    <a href="#preise"><small>03</small>Preise</a>
+    <a href="#einsatzgebiet"><small>04</small>Einsatzgebiet</a>
+    <a href="#kontakt"><small>05</small>Kontakt</a>
     <a href="#faq"><small>06</small>FAQ</a>
-    <a href="#kontakt"><small>07</small>Kontakt</a>
   </nav>
   <div class="mobile-menu__foot">
     <a href="tel:+491631769483">0163 1769483</a>
@@ -320,12 +315,12 @@
     <p class="eyebrow eyebrow--light" data-intro>Abriss · Entrümpelung · Entsorgung</p>
 
     <h1 class="hero__title" id="hero-title">
-      <span class="line"><span data-intro-line>Raus damit.</span></span>
-      <span class="line line--accent"><span data-intro-line>Sauber fertig.</span></span>
+      <span class="line"><span data-intro-line data-site="hero.title_1">RAUS DAMIT.</span></span>
+      <span class="line line--accent"><span data-intro-line data-site="hero.title_2">SAUBER FERTIG.</span></span>
     </h1>
 
     <div class="hero__bottom">
-      <p class="hero__lead" data-intro>Diek Abriss räumt, baut zurück, entsorgt und schafft Platz. Direkt, zuverlässig und mit sauberer Übergabe.</p>
+      <p class="hero__lead" data-intro data-site="hero.lead">Diek Abriss räumt, baut zurück, entsorgt und schafft Platz. Direkt, zuverlässig und mit sauberer Übergabe.</p>
       <div class="hero__actions" data-intro>
         <a class="btn btn--primary btn--lg" href="#kontakt" data-magnetic><span>Kostenlos anfragen</span><svg class="btn__arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
         <a class="btn btn--ghost btn--lg" href="https://wa.me/491631769483" target="_blank" rel="noopener" data-magnetic>
@@ -347,7 +342,7 @@
   <div class="hero__stats">
     <dl class="wrap stats">
       <div class="stat"><dt class="mono">Leistungen aus einer Hand</dt><dd><span data-count="4">4</span></dd></div>
-      <div class="stat"><dt class="mono">Orte im Einsatzgebiet</dt><dd><span data-count="21">21</span></dd></div>
+      <div class="stat"><dt class="mono">Orte im Einsatzgebiet</dt><dd><span data-count="21" data-city-count>21</span></dd></div>
       <div class="stat"><dt class="mono">Anfrage &amp; Einschätzung</dt><dd><span data-count="0">0</span><sup>€</sup></dd></div>
       <div class="stat"><dt class="mono">Besenreine Übergabe</dt><dd><span data-count="100">100</span><sup>%</sup></dd></div>
     </dl>
@@ -522,100 +517,66 @@
   </div>
 </section>
 
-<!-- ========================= REFERENZEN ========================= -->
-<section class="section refs theme-dark" id="referenzen" aria-labelledby="ref-title">
-  <div class="wrap">
-    <div class="section-head section-head--split">
-      <div>
-        <p class="eyebrow eyebrow--light" data-reveal><span class="mono idx">04</span>Referenzen</p>
-        <h2 class="h-display" id="ref-title" data-reveal>Vorher <span class="arrow" aria-hidden="true">→</span><span class="sr-only">zu</span> Nachher</h2>
-      </div>
-      <p class="lead" data-reveal>Ziehen Sie den Regler, um den Unterschied zu sehen.
-        <!-- Hinweis für Betreiber: Platzhalter durch echte Projektfotos ersetzen. -->
-      </p>
-    </div>
-
-    <!-- Vorher/Nachher-Vergleich: vorher.* und nachher.* (1600×1000) aus identischer Perspektive fotografieren -->
-    <div class="compare" data-compare data-reveal style="--pos:50%">
-      <picture class="compare__after"><source type="image/avif" srcset="assets/img/nachher.avif"><source type="image/webp" srcset="assets/img/nachher.webp"><img src="assets/img/nachher.jpg" width="1600" height="1000" alt="Nachher: leerer, besenreiner Raum" loading="lazy" decoding="async"></picture>
-      <picture class="compare__before"><source type="image/avif" srcset="assets/img/vorher.avif"><source type="image/webp" srcset="assets/img/vorher.webp"><img src="assets/img/vorher.jpg" width="1600" height="1000" alt="Vorher: vollgestellter Raum vor der Entrümpelung" loading="lazy" decoding="async"></picture>
-      <span class="compare__label compare__label--l mono">Vorher</span>
-      <span class="compare__label compare__label--r mono">Nachher</span>
-      <span class="compare__handle" aria-hidden="true"><span></span></span>
-      <input class="compare__range" type="range" min="0" max="100" value="50" aria-label="Vorher-Nachher-Vergleich verschieben">
-    </div>
-
-    <!-- Projektgalerie: ref-*.avif/.webp/.jpg (900×1100). Beschriftung im figcaption anpassen. -->
-    <ul class="gallery" data-gallery>
-      <li data-reveal><figure class="tilt" data-tilt><picture><source type="image/avif" srcset="assets/img/ref-wohnung.avif"><source type="image/webp" srcset="assets/img/ref-wohnung.webp"><img src="assets/img/ref-wohnung.jpg" width="900" height="1100" alt="Entrümpelte Wohnung" loading="lazy" decoding="async"></picture><figcaption><span class="mono">01</span>Wohnung · Entrümpelung</figcaption></figure></li>
-      <li data-reveal><figure class="tilt" data-tilt><picture><source type="image/avif" srcset="assets/img/ref-kueche.avif"><source type="image/webp" srcset="assets/img/ref-kueche.webp"><img src="assets/img/ref-kueche.jpg" width="900" height="1100" alt="Demontierte Küche" loading="lazy" decoding="async"></picture><figcaption><span class="mono">02</span>Küche · Demontage</figcaption></figure></li>
-      <li data-reveal><figure class="tilt" data-tilt><picture><source type="image/avif" srcset="assets/img/ref-bad.avif"><source type="image/webp" srcset="assets/img/ref-bad.webp"><img src="assets/img/ref-bad.jpg" width="900" height="1100" alt="Rückgebautes Bad" loading="lazy" decoding="async"></picture><figcaption><span class="mono">03</span>Bad · Rückbau</figcaption></figure></li>
-      <li data-reveal><figure class="tilt" data-tilt><picture><source type="image/avif" srcset="assets/img/ref-garten.avif"><source type="image/webp" srcset="assets/img/ref-garten.webp"><img src="assets/img/ref-garten.jpg" width="900" height="1100" alt="Geräumter Garten" loading="lazy" decoding="async"></picture><figcaption><span class="mono">04</span>Garten · Räumung</figcaption></figure></li>
-      <li data-reveal><figure class="tilt" data-tilt><picture><source type="image/avif" srcset="assets/img/ref-fliesen.avif"><source type="image/webp" srcset="assets/img/ref-fliesen.webp"><img src="assets/img/ref-fliesen.jpg" width="900" height="1100" alt="Entfernte Fliesen" loading="lazy" decoding="async"></picture><figcaption><span class="mono">05</span>Fliesen · Entfernen</figcaption></figure></li>
-      <li data-reveal><figure class="tilt" data-tilt><picture><source type="image/avif" srcset="assets/img/ref-keller.avif"><source type="image/webp" srcset="assets/img/ref-keller.webp"><img src="assets/img/ref-keller.jpg" width="900" height="1100" alt="Entrümpelter Keller" loading="lazy" decoding="async"></picture><figcaption><span class="mono">06</span>Keller · Entrümpelung</figcaption></figure></li>
-    </ul>
-  </div>
-</section>
-
 <!-- ========================= PREIS-ORIENTIERUNG ========================= -->
 <section class="section pricing" id="preise" aria-labelledby="preise-title">
   <div class="wrap pricing__grid">
     <div class="pricing__intro">
-      <p class="eyebrow" data-reveal><span class="mono idx">05</span>Schnelleinschätzung</p>
+      <p class="eyebrow" data-reveal><span class="mono idx">04</span>Schnelleinschätzung</p>
       <h2 class="h-display" id="preise-title" data-reveal>Was könnte es<br>ungefähr kosten?</h2>
       <p class="lead" data-reveal>Nur eine unverbindliche Orientierung. Der tatsächliche Preis hängt vom Umfang, Zugang, Material und Entsorgung ab.</p>
     </div>
 
-    <!-- Preislogik (wie bisher): 400 € Basis + Objekt + Aufwand + Entsorgung (+ Material), auf 10 € gerundet.
-         Werte in den value-Attributen anpassen. -->
+    <!-- Preislogik (wie bisher): Basis + Objekt + Art + Aufwand + Entsorgung (+ Material), auf 10 € gerundet.
+         Die Beträge werden im internen Bereich („Website-Funktionen“) gepflegt und aus Supabase geladen;
+         die value-Attribute hier sind nur die Standardwerte. -->
     <form class="calc" data-calc data-reveal onsubmit="return false" aria-label="Preisrechner">
       <fieldset class="calc__group">
         <legend class="mono">Objekt</legend>
         <div class="chips">
-          <label class="chip"><input type="radio" name="obj" value="0" data-label="Wohnung / Zimmer" checked><span>Wohnung / Zimmer</span></label>
-          <label class="chip"><input type="radio" name="obj" value="150" data-label="Keller / Garage"><span>Keller / Garage</span></label>
-          <label class="chip"><input type="radio" name="obj" value="300" data-label="Haus"><span>Haus</span></label>
-          <label class="chip"><input type="radio" name="obj" value="250" data-label="Gewerbe"><span>Gewerbe</span></label>
-          <label class="chip"><input type="radio" name="obj" value="200" data-label="Garten"><span>Garten</span></label>
+          <label class="chip"><input type="radio" name="obj" value="0" data-price-group="object" data-price-key="wohnung" data-label="Wohnung / Zimmer" checked><span>Wohnung / Zimmer</span></label>
+          <label class="chip"><input type="radio" name="obj" value="150" data-price-group="object" data-price-key="keller" data-label="Keller / Garage"><span>Keller / Garage</span></label>
+          <label class="chip"><input type="radio" name="obj" value="300" data-price-group="object" data-price-key="haus" data-label="Haus"><span>Haus</span></label>
+          <label class="chip"><input type="radio" name="obj" value="250" data-price-group="object" data-price-key="gewerbe" data-label="Gewerbe"><span>Gewerbe</span></label>
+          <label class="chip"><input type="radio" name="obj" value="200" data-price-group="object" data-price-key="garten" data-label="Garten"><span>Garten</span></label>
         </div>
       </fieldset>
       <fieldset class="calc__group">
         <legend class="mono">Art der Arbeit</legend>
         <div class="chips">
-          <label class="chip"><input type="radio" name="work" value="0" data-label="Abriss" checked><span>Abriss</span></label>
-          <label class="chip"><input type="radio" name="work" value="0" data-label="Entsorgung"><span>Entsorgung</span></label>
-          <label class="chip"><input type="radio" name="work" value="0" data-label="Entrümpelung"><span>Entrümpelung</span></label>
-          <label class="chip"><input type="radio" name="work" value="0" data-label="Demontage"><span>Demontage</span></label>
-          <label class="chip"><input type="radio" name="work" value="0" data-label="Rückbau"><span>Rückbau</span></label>
-          <label class="chip"><input type="radio" name="work" value="0" data-label="Komplettpaket"><span>Komplettpaket</span></label>
+          <label class="chip"><input type="radio" name="work" value="0" data-price-group="work" data-price-key="abriss" data-label="Abriss" checked><span>Abriss</span></label>
+          <label class="chip"><input type="radio" name="work" value="0" data-price-group="work" data-price-key="entsorgung" data-label="Entsorgung"><span>Entsorgung</span></label>
+          <label class="chip"><input type="radio" name="work" value="0" data-price-group="work" data-price-key="entruempelung" data-label="Entrümpelung"><span>Entrümpelung</span></label>
+          <label class="chip"><input type="radio" name="work" value="0" data-price-group="work" data-price-key="demontage" data-label="Demontage"><span>Demontage</span></label>
+          <label class="chip"><input type="radio" name="work" value="0" data-price-group="work" data-price-key="rueckbau" data-label="Rückbau"><span>Rückbau</span></label>
+          <label class="chip"><input type="radio" name="work" value="0" data-price-group="work" data-price-key="komplettpaket" data-label="Komplettpaket"><span>Komplettpaket</span></label>
         </div>
       </fieldset>
       <fieldset class="calc__group">
         <legend class="mono">Aufwand</legend>
         <div class="chips chips--scale">
-          <label class="chip"><input type="radio" name="size" value="250" checked><span>klein</span></label>
-          <label class="chip"><input type="radio" name="size" value="500"><span>mittel</span></label>
-          <label class="chip"><input type="radio" name="size" value="850"><span>groß</span></label>
-          <label class="chip"><input type="radio" name="size" value="1300"><span>sehr groß</span></label>
+          <label class="chip"><input type="radio" name="size" value="250" data-price-group="size" data-price-key="klein" checked><span>klein</span></label>
+          <label class="chip"><input type="radio" name="size" value="500" data-price-group="size" data-price-key="mittel"><span>mittel</span></label>
+          <label class="chip"><input type="radio" name="size" value="850" data-price-group="size" data-price-key="gross"><span>groß</span></label>
+          <label class="chip"><input type="radio" name="size" value="1300" data-price-group="size" data-price-key="sehr_gross"><span>sehr groß</span></label>
         </div>
       </fieldset>
       <fieldset class="calc__group">
         <legend class="mono">Mit oder ohne Entsorgung</legend>
         <div class="chips">
-          <label class="chip"><input type="radio" name="disposal" value="0" checked><span>Nein – ohne Entsorgung</span></label>
-          <label class="chip"><input type="radio" name="disposal" value="180"><span>Ja – mit Entsorgung</span></label>
+          <label class="chip"><input type="radio" name="disposal" value="0" data-price-group="disposal" data-price-key="nein" checked><span>Nein – ohne Entsorgung</span></label>
+          <label class="chip"><input type="radio" name="disposal" value="180" data-price-group="disposal" data-price-key="ja"><span>Ja – mit Entsorgung</span></label>
         </div>
       </fieldset>
       <fieldset class="calc__group calc__group--cond" data-calc-waste hidden>
         <legend class="mono">Was soll entsorgt werden?</legend>
         <div class="chips">
-          <label class="chip"><input type="radio" name="waste" value="0" data-label="Schrank / Möbel" checked><span>Schrank / Möbel</span></label>
-          <label class="chip"><input type="radio" name="waste" value="80" data-label="Sperrmüll"><span>Sperrmüll</span></label>
-          <label class="chip"><input type="radio" name="waste" value="140" data-label="Holz"><span>Holz</span></label>
-          <label class="chip"><input type="radio" name="waste" value="220" data-label="Bauschutt"><span>Bauschutt</span></label>
-          <label class="chip"><input type="radio" name="waste" value="120" data-label="Gartenabfälle"><span>Gartenabfälle</span></label>
-          <label class="chip"><input type="radio" name="waste" value="250" data-label="Gemischte Abfälle"><span>Gemischte Abfälle</span></label>
-          <label class="chip"><input type="radio" name="waste" value="0" data-label="Sonstiges"><span>Sonstiges – im Text angeben</span></label>
+          <label class="chip"><input type="radio" name="waste" value="0" data-price-group="waste" data-price-key="moebel" data-label="Schrank / Möbel" checked><span>Schrank / Möbel</span></label>
+          <label class="chip"><input type="radio" name="waste" value="80" data-price-group="waste" data-price-key="sperrmuell" data-label="Sperrmüll"><span>Sperrmüll</span></label>
+          <label class="chip"><input type="radio" name="waste" value="140" data-price-group="waste" data-price-key="holz" data-label="Holz"><span>Holz</span></label>
+          <label class="chip"><input type="radio" name="waste" value="220" data-price-group="waste" data-price-key="bauschutt" data-label="Bauschutt"><span>Bauschutt</span></label>
+          <label class="chip"><input type="radio" name="waste" value="120" data-price-group="waste" data-price-key="gartenabfaelle" data-label="Gartenabfälle"><span>Gartenabfälle</span></label>
+          <label class="chip"><input type="radio" name="waste" value="250" data-price-group="waste" data-price-key="gemischt" data-label="Gemischte Abfälle"><span>Gemischte Abfälle</span></label>
+          <label class="chip"><input type="radio" name="waste" value="0" data-price-group="waste" data-price-key="sonstiges" data-label="Sonstiges"><span>Sonstiges – im Text angeben</span></label>
         </div>
       </fieldset>
 
@@ -630,45 +591,20 @@
   </div>
 </section>
 
-<!-- ========================= KUNDENSTIMMEN ========================= -->
-<!-- WICHTIG: Musterbewertungen vor Veröffentlichung durch echte Kundenbewertungen
-     (z. B. aus Google Business) ersetzen oder diese Sektion entfernen. -->
-<section class="section reviews" aria-labelledby="reviews-title">
-  <div class="wrap reviews__grid">
-    <div class="reviews__head">
-      <p class="eyebrow" data-reveal><span class="mono idx">06</span>Kundenstimmen · Muster</p>
-      <h2 class="h-display" id="reviews-title" data-reveal>Was Kunden sagen.</h2>
-      <p class="note mono" data-reveal>Musterbewertungen – vor Veröffentlichung durch echte Kundenbewertungen ersetzen.</p>
-    </div>
-    <blockquote class="quote quote--lg" data-reveal>
-      <p>„Schneller Termin, saubere Arbeit und die Wohnung war am Ende komplett leer.“</p>
-      <footer><span class="stars" aria-label="5 von 5 Sternen">★★★★★</span> Michael K.</footer>
-    </blockquote>
-    <blockquote class="quote" data-reveal>
-      <p>„Von der Küche bis zum Abtransport wurde alles übernommen. Sehr unkompliziert.“</p>
-      <footer><span class="stars" aria-label="5 von 5 Sternen">★★★★★</span> Sarah M.</footer>
-    </blockquote>
-    <blockquote class="quote" data-reveal>
-      <p>„Faire Kommunikation und sauber übergeben. Genau so sollte es sein.“</p>
-      <footer><span class="stars" aria-label="5 von 5 Sternen">★★★★★</span> Thomas R.</footer>
-    </blockquote>
-  </div>
-</section>
-
 <!-- ========================= EINSATZGEBIET ========================= -->
 <section class="section area theme-dark" id="einsatzgebiet" aria-labelledby="area-title">
   <div class="wrap area__grid">
     <div class="area__copy">
-      <p class="eyebrow eyebrow--light" data-reveal><span class="mono idx">07</span>Einsatzgebiet</p>
-      <h2 class="h-display" id="area-title" data-reveal>Augsburg<br>&amp; Umgebung</h2>
-      <p class="lead" data-reveal>Wir sind in Augsburg und vielen Orten in der Umgebung unterwegs.</p>
+      <p class="eyebrow eyebrow--light" data-reveal><span class="mono idx">05</span>Einsatzgebiet</p>
+      <h2 class="h-display" id="area-title" data-reveal data-site="area.title">Augsburg &amp; Umgebung</h2>
+      <p class="lead" data-reveal data-site="area.lead">Wir sind in Augsburg und vielen Orten in der Umgebung unterwegs.</p>
       <ul class="area__list" data-area-list>
-        <li data-town="augsburg">Augsburg</li><li data-town="aichach">Aichach</li><li data-town="koenigsbrunn">Königsbrunn</li>
+        <li data-town="augsburg">Augsburg</li><li data-town="aichach">Aichach</li><li data-town="konigsbrunn">Königsbrunn</li>
         <li data-town="mering">Mering</li><li data-town="friedberg">Friedberg</li><li data-town="gersthofen">Gersthofen</li>
-        <li data-town="neusaess">Neusäß</li><li data-town="stadtbergen">Stadtbergen</li><li data-town="bobingen">Bobingen</li>
-        <li data-town="kissing">Kissing</li><li data-town="diedorf">Diedorf</li><li data-town="schwabmuenchen">Schwabmünchen</li>
-        <li data-town="meitingen">Meitingen</li><li data-town="landsberg">Landsberg am Lech</li><li data-town="ffb">Fürstenfeldbruck</li>
-        <li data-town="dachau">Dachau</li><li data-town="wertingen">Wertingen</li><li data-town="guenzburg">Günzburg</li>
+        <li data-town="neusa">Neusäß</li><li data-town="stadtbergen">Stadtbergen</li><li data-town="bobingen">Bobingen</li>
+        <li data-town="kissing">Kissing</li><li data-town="diedorf">Diedorf</li><li data-town="schwabmunchen">Schwabmünchen</li>
+        <li data-town="meitingen">Meitingen</li><li data-town="landsbergamlech">Landsberg am Lech</li><li data-town="furstenfeldbruck">Fürstenfeldbruck</li>
+        <li data-town="dachau">Dachau</li><li data-town="wertingen">Wertingen</li><li data-town="gunzburg">Günzburg</li>
         <li data-town="burgau">Burgau</li><li data-town="thannhausen">Thannhausen</li><li data-town="mindelheim">Mindelheim</li>
       </ul>
     </div>
@@ -690,22 +626,22 @@
         <g class="map__towns">
           <g data-town="augsburg" class="town town--main" transform="translate(0 0)"><circle r="1.8"/><text x="2.8" y="-2.2">Augsburg</text></g>
           <g data-town="aichach" class="town" transform="translate(17.4 -9.6)"><circle r="1"/><text x="2" y="1">Aichach</text></g>
-          <g data-town="koenigsbrunn" class="town" transform="translate(-0.7 11.4)"><circle r="1"/><text x="0" y="4.2" text-anchor="middle">Königsbrunn</text></g>
+          <g data-town="konigsbrunn" class="town" transform="translate(-0.7 11.4)"><circle r="1"/><text x="0" y="4.2" text-anchor="middle">Königsbrunn</text></g>
           <g data-town="mering" class="town town--hq" transform="translate(6.4 11.6)"><circle r="1.4"/><circle class="pulse" r="1.4"/><text x="2.4" y="3.2">Mering · Sitz</text></g>
           <g data-town="friedberg" class="town" transform="translate(6.4 1.6)"><circle r="1"/><text x="2" y="1">Friedberg</text></g>
           <g data-town="gersthofen" class="town" transform="translate(-1.8 -5.9)"><circle r="1"/><text x="2" y="-1">Gersthofen</text></g>
-          <g data-town="neusaess" class="town" transform="translate(-5 -3.3)"><circle r="1"/><text x="-2" y="-1" text-anchor="end">Neusäß</text></g>
+          <g data-town="neusa" class="town" transform="translate(-5 -3.3)"><circle r="1"/><text x="-2" y="-1" text-anchor="end">Neusäß</text></g>
           <g data-town="stadtbergen" class="town" transform="translate(-4.1 0.6)"><circle r="1"/><text x="0" y="3.8" text-anchor="middle">Stadtbergen</text></g>
           <g data-town="bobingen" class="town" transform="translate(-4.7 11.1)"><circle r="1"/><text x="-2" y="0.4" text-anchor="end">Bobingen</text></g>
           <g data-town="kissing" class="town" transform="translate(5.3 7.8)"><circle r="1"/><text x="2" y="0">Kissing</text></g>
           <g data-town="diedorf" class="town" transform="translate(-8.7 2.3)"><circle r="1"/><text x="-2" y="-0.8" text-anchor="end">Diedorf</text></g>
-          <g data-town="schwabmuenchen" class="town" transform="translate(-10.6 21.2)"><circle r="1"/><text x="-2" y="1" text-anchor="end">Schwabmünchen</text></g>
+          <g data-town="schwabmunchen" class="town" transform="translate(-10.6 21.2)"><circle r="1"/><text x="-2" y="1" text-anchor="end">Schwabmünchen</text></g>
           <g data-town="meitingen" class="town" transform="translate(-3.5 -19.6)"><circle r="1"/><text x="2" y="1">Meitingen</text></g>
-          <g data-town="landsberg" class="town" transform="translate(-1.1 35.9)"><circle r="1"/><text x="2" y="1">Landsberg a. Lech</text></g>
-          <g data-town="ffb" class="town" transform="translate(26.4 21.4)"><circle r="1"/><text x="2" y="1">Fürstenfeldbruck</text></g>
+          <g data-town="landsbergamlech" class="town" transform="translate(-1.1 35.9)"><circle r="1"/><text x="2" y="1">Landsberg a. Lech</text></g>
+          <g data-town="furstenfeldbruck" class="town" transform="translate(26.4 21.4)"><circle r="1"/><text x="2" y="1">Fürstenfeldbruck</text></g>
           <g data-town="dachau" class="town" transform="translate(39.7 12.3)"><circle r="1"/><text x="-2" y="-1.6" text-anchor="end">Dachau</text></g>
           <g data-town="wertingen" class="town" transform="translate(-16 -21.4)"><circle r="1"/><text x="-2" y="1" text-anchor="end">Wertingen</text></g>
-          <g data-town="guenzburg" class="town" transform="translate(-45.9 -9.2)"><circle r="1"/><text x="0" y="-2.2" text-anchor="middle">Günzburg</text></g>
+          <g data-town="gunzburg" class="town" transform="translate(-45.9 -9.2)"><circle r="1"/><text x="0" y="-2.2" text-anchor="middle">Günzburg</text></g>
           <g data-town="burgau" class="town" transform="translate(-36.2 -6.7)"><circle r="1"/><text x="0" y="3.6" text-anchor="middle">Burgau</text></g>
           <g data-town="thannhausen" class="town" transform="translate(-31.6 9.6)"><circle r="1"/><text x="0" y="3.6" text-anchor="middle">Thannhausen</text></g>
           <g data-town="mindelheim" class="town" transform="translate(-30.2 36)"><circle r="1"/><text x="2" y="1">Mindelheim</text></g>
@@ -720,19 +656,19 @@
 <section class="section contact" id="kontakt" aria-labelledby="kontakt-title">
   <div class="wrap contact__grid">
     <div class="contact__copy">
-      <p class="eyebrow" data-reveal><span class="mono idx">08</span>Kostenlose Anfrage</p>
+      <p class="eyebrow" data-reveal><span class="mono idx">06</span>Kostenlose Anfrage</p>
       <h2 class="h-display" id="kontakt-title" data-reveal>Erzähl uns,<br>was weg muss.</h2>
       <p class="lead" data-reveal>Fotos helfen bei der Einschätzung. Alternativ vereinbaren wir eine Besichtigung.</p>
 
       <ul class="direct" data-reveal>
-        <li><a href="tel:+491631769483"><small class="mono">Telefon</small><span>0163 1769483</span><i aria-hidden="true">→</i></a></li>
+        <li><a href="tel:+491631769483"><small class="mono">Telefon</small><span data-site="contact.phone">0163 1769483</span><i aria-hidden="true">→</i></a></li>
         <li><a href="https://wa.me/491631769483" target="_blank" rel="noopener"><small class="mono">WhatsApp</small><span>Direkt schreiben</span><i aria-hidden="true">→</i></a></li>
-        <li><a href="mailto:info@diek-abriss.de"><small class="mono">E-Mail</small><span>info@diek-abriss.de</span><i aria-hidden="true">→</i></a></li>
+        <li><a href="mailto:info@diek-abriss.de"><small class="mono">E-Mail</small><span data-site="contact.email">info@diek-abriss.de</span><i aria-hidden="true">→</i></a></li>
       </ul>
     </div>
 
     <!-- Formular speichert Anfragen + Fotos in Supabase (Zugangsdaten in config.js).
-         Ohne Supabase-Konfiguration: Demo-Modus (lokale Speicherung im Browser). -->
+         Ohne Supabase-Konfiguration erscheint ein Hinweis auf Telefon/WhatsApp. Max. 10 Fotos pro Anfrage. -->
     <form class="form" id="form" novalidate data-reveal>
       <div class="form__row">
         <div class="field"><input id="f-first" name="first_name" required autocomplete="given-name" minlength="2" pattern="[A-Za-zÄÖÜäöüßÀ-ÿ\- ]{2,}" placeholder=" "><label for="f-first">Vorname *</label></div>
@@ -781,7 +717,7 @@
       <div class="upload" data-dropzone>
         <div class="upload__head">
           <span class="mono">Fotos hinzufügen</span>
-          <small id="fileNames" class="mono">JPG, PNG, WebP oder HEIC · je max. 10 MB</small>
+          <small id="fileNames" class="mono">Max. 10 Fotos · JPG, PNG, WebP oder HEIC · je max. 10 MB</small>
         </div>
         <div class="upload__actions">
           <button class="upload__btn" type="button" id="cameraBtn">
@@ -811,23 +747,21 @@
 </section>
 
 <!-- ========================= FAQ ========================= -->
-<!-- Antworten bitte vom Betrieb prüfen lassen. Bei Änderungen auch das FAQPage-JSON-LD im <head> anpassen! -->
+<!-- FAQ wird im internen Bereich („Website-Funktionen“) gepflegt und beim Laden aus Supabase übernommen
+     (sichtbare Liste + FAQPage-JSON-LD). Die Einträge hier sind die Standardwerte. -->
 <section class="section faq" id="faq" aria-labelledby="faq-title">
   <div class="wrap faq__grid">
     <div class="faq__head">
-      <p class="eyebrow" data-reveal><span class="mono idx">09</span>FAQ</p>
+      <p class="eyebrow" data-reveal><span class="mono idx">07</span>FAQ</p>
       <h2 class="h-display" id="faq-title" data-reveal>Häufige<br>Fragen.</h2>
       <p class="lead" data-reveal>Noch etwas offen? Rufen Sie an: <a class="link" href="tel:+491631769483">0163 1769483</a></p>
     </div>
     <div class="faq__list" data-faq>
-      <details data-reveal><summary><span>Was kostet ein Abriss oder eine Entrümpelung?</span><i aria-hidden="true"></i></summary><div class="faq__a"><p>Der Preis hängt vom Umfang, dem Zugang, dem Material und der Entsorgung ab. Die <a class="link" href="#preise">Schnelleinschätzung</a> gibt eine erste, unverbindliche Orientierung. Ein verbindliches, transparentes Angebot erhalten Sie nach der Einschätzung anhand Ihrer Fotos oder einer Besichtigung.</p></div></details>
-      <details data-reveal><summary><span>Ist die Anfrage kostenlos?</span><i aria-hidden="true"></i></summary><div class="faq__a"><p>Ja. Ihre Anfrage und unsere Einschätzung sind kostenlos und unverbindlich. Leistungsumfang und Preis werden vor Beginn klar besprochen.</p></div></details>
-      <details data-reveal><summary><span>Muss vorher jemand vor Ort besichtigen?</span><i aria-hidden="true"></i></summary><div class="faq__a"><p>Oft reichen aussagekräftige Fotos, die Sie direkt über das Formular oder per WhatsApp senden können. Alternativ vereinbaren wir gerne eine Besichtigung vor Ort.</p></div></details>
-      <details data-reveal><summary><span>Übernehmen Sie auch die Entsorgung?</span><i aria-hidden="true"></i></summary><div class="faq__a"><p>Ja. Auf Wunsch übernehmen wir den Abtransport und die fachgerechte Entsorgung der anfallenden Materialien, zum Beispiel Sperrmüll, Holz, gemischte Abfälle, Bauschutt und Grünschnitt.</p></div></details>
-      <details data-reveal><summary><span>Wie schnell bekomme ich einen Termin?</span><i aria-hidden="true"></i></summary><div class="faq__a"><p>Wir melden uns schnellstmöglich nach Ihrer Anfrage und stimmen einen Termin ab, der zu Ihrem Vorhaben passt. Kurzfristige Einsätze sind nach Absprache möglich.</p></div></details>
-      <details data-reveal><summary><span>In welchem Gebiet sind Sie im Einsatz?</span><i aria-hidden="true"></i></summary><div class="faq__a"><p>Wir sind in Augsburg und vielen Orten der Umgebung unterwegs, unter anderem in Friedberg, Mering, Königsbrunn, Gersthofen, Neusäß, Stadtbergen, Aichach, Bobingen, Kissing, Diedorf, Schwabmünchen, Meitingen, Landsberg am Lech, Fürstenfeldbruck, Dachau, Wertingen, Günzburg, Burgau, Thannhausen und Mindelheim.</p></div></details>
-      <details data-reveal><summary><span>In welchem Zustand wird die Fläche übergeben?</span><i aria-hidden="true"></i></summary><div class="faq__a"><p>Besenrein. Nach der Arbeit bleibt die Fläche ordentlich und bereit für den nächsten Schritt – ob Renovierung, Übergabe oder Neubezug.</p></div></details>
-      <details data-reveal><summary><span>Arbeiten Sie für Privat- und Gewerbekunden?</span><i aria-hidden="true"></i></summary><div class="faq__a"><p>Ja. Wir arbeiten in Wohnungen, Häusern, Kellern, Garagen, Gärten sowie in Gewerberäumen und auf Baustellen – mit einem persönlichen Ansprechpartner statt einer anonymen Vermittlungsplattform.</p></div></details>
+      <details data-reveal><summary><span>Welche Arbeiten übernehmen Sie?</span><i aria-hidden="true"></i></summary><div class="faq__a"><p>Wir unterstützen bei Abriss, Entrümpelung, Demontage, Rückbau und Entsorgung – für Wohnungen, Häuser, Keller, Gärten, Gewerbe und Baustellen.</p></div></details>
+      <details data-reveal><summary><span>Wie kann ich eine Anfrage stellen?</span><i aria-hidden="true"></i></summary><div class="faq__a"><p>Sie können das Anfrageformular nutzen, uns anrufen oder direkt per WhatsApp schreiben. Fotos helfen uns bei einer schnellen Einschätzung.</p></div></details>
+      <details data-reveal><summary><span>Kann ich Fotos mit meiner Anfrage senden?</span><i aria-hidden="true"></i></summary><div class="faq__a"><p>Ja. Sie können direkt mit der Kamera ein Foto aufnehmen oder bis zu zehn Fotos aus Ihrer Galerie beziehungsweise Ihren Dateien auswählen.</p></div></details>
+      <details data-reveal><summary><span>Übernehmen Sie auch die Entsorgung?</span><i aria-hidden="true"></i></summary><div class="faq__a"><p>Ja. Wenn Sie Entsorgung auswählen, berücksichtigen wir den Abtransport und die fachgerechte Entsorgung in der Einschätzung.</p></div></details>
+      <details data-reveal><summary><span>In welchem Gebiet sind Sie tätig?</span><i aria-hidden="true"></i></summary><div class="faq__a"><p>Wir sind in Augsburg und vielen Orten in der Umgebung unterwegs. Die aktuellen Einsatzorte finden Sie direkt auf dieser Seite.</p></div></details>
     </div>
   </div>
 </section>
@@ -914,6 +848,6 @@
 <script src="assets/vendor/ScrollTrigger.min.js" defer></script>
 <script src="assets/vendor/lenis.min.js" defer></script>
 <script src="config.js?v=3.0.0" defer></script>
-<script src="script.js?v=3.0.0" defer></script>
+<script src="script.js?v=3.1.0" defer></script>
 </body>
 </html>

@@ -48,6 +48,76 @@ drop policy if exists "Staff can delete requests" on public.contact_requests;
 create policy "Staff can delete requests" on public.contact_requests
 for delete to authenticated using (true);
 
+-- Öffentliche Website-Einstellungen. Besucher dürfen die aktuellen Werte lesen,
+-- aber ausschließlich angemeldete Mitarbeiter dürfen sie verändern.
+create table if not exists public.site_settings (
+  key text primary key,
+  value jsonb not null,
+  updated_at timestamptz not null default now()
+);
+
+alter table public.site_settings enable row level security;
+
+insert into public.site_settings (key, value)
+values (
+  'site',
+  '{
+    "hero": {
+      "title_1": "RAUS DAMIT.",
+      "title_2": "SAUBER FERTIG.",
+      "lead": "Diek Abriss räumt, baut zurück, entsorgt und schafft Platz. Direkt, zuverlässig und mit sauberer Übergabe."
+    },
+    "contact": {
+      "phone": "0163 1769483",
+      "email": "info@diek-abriss.de",
+      "whatsapp": "491631769483"
+    },
+    "area": {
+      "title": "Augsburg & Umgebung",
+      "lead": "Wir sind in Augsburg und vielen Orten in der Umgebung unterwegs.",
+      "cities": ["Augsburg", "Aichach", "Königsbrunn", "Mering", "Friedberg", "Gersthofen", "Neusäß", "Stadtbergen", "Bobingen", "Kissing", "Diedorf", "Schwabmünchen", "Meitingen", "Landsberg am Lech", "Fürstenfeldbruck", "Dachau", "Wertingen", "Günzburg", "Burgau", "Thannhausen", "Mindelheim"]
+    },
+    "faq": [
+      {"question": "Welche Arbeiten übernehmen Sie?", "answer": "Wir unterstützen bei Abriss, Entrümpelung, Demontage, Rückbau und Entsorgung – für Wohnungen, Häuser, Keller, Gärten, Gewerbe und Baustellen."},
+      {"question": "Wie kann ich eine Anfrage stellen?", "answer": "Sie können das Anfrageformular nutzen, uns anrufen oder direkt per WhatsApp schreiben. Fotos helfen uns bei einer schnellen Einschätzung."},
+      {"question": "Kann ich Fotos mit meiner Anfrage senden?", "answer": "Ja. Sie können direkt mit der Kamera ein Foto aufnehmen oder bis zu zehn Fotos aus Ihrer Galerie beziehungsweise Ihren Dateien auswählen."},
+      {"question": "Übernehmen Sie auch die Entsorgung?", "answer": "Ja. Wenn Sie Entsorgung auswählen, berücksichtigen wir den Abtransport und die fachgerechte Entsorgung in der Einschätzung."},
+      {"question": "In welchem Gebiet sind Sie tätig?", "answer": "Wir sind in Augsburg und vielen Orten in der Umgebung unterwegs. Die aktuellen Einsatzorte finden Sie direkt auf dieser Seite."}
+    ],
+    "pricing": {
+      "base": 400,
+      "object": {"wohnung": 0, "keller": 150, "haus": 300, "gewerbe": 250, "garten": 200},
+      "work": {"abriss": 0, "entsorgung": 0, "entruempelung": 0, "demontage": 0, "rueckbau": 0, "komplettpaket": 0},
+      "size": {"klein": 250, "mittel": 500, "gross": 850, "sehr_gross": 1300},
+      "disposal": {"nein": 0, "ja": 180},
+      "waste": {"moebel": 0, "sperrmuell": 80, "holz": 140, "bauschutt": 220, "gartenabfaelle": 120, "gemischt": 250, "sonstiges": 0}
+    }
+  }'::jsonb
+)
+on conflict (key) do nothing;
+
+-- Bei einer bestehenden Installation ergänzt dieser Schritt nur die neue FAQ,
+-- ohne bereits gepflegte Kontakt-, Einsatzgebiet- oder Preisangaben zu ändern.
+update public.site_settings
+set value = jsonb_set(
+  value,
+  '{faq}',
+  '[{"question":"Welche Arbeiten übernehmen Sie?","answer":"Wir unterstützen bei Abriss, Entrümpelung, Demontage, Rückbau und Entsorgung – für Wohnungen, Häuser, Keller, Gärten, Gewerbe und Baustellen."},{"question":"Wie kann ich eine Anfrage stellen?","answer":"Sie können das Anfrageformular nutzen, uns anrufen oder direkt per WhatsApp schreiben. Fotos helfen uns bei einer schnellen Einschätzung."},{"question":"Kann ich Fotos mit meiner Anfrage senden?","answer":"Ja. Sie können direkt mit der Kamera ein Foto aufnehmen oder bis zu zehn Fotos aus Ihrer Galerie beziehungsweise Ihren Dateien auswählen."},{"question":"Übernehmen Sie auch die Entsorgung?","answer":"Ja. Wenn Sie Entsorgung auswählen, berücksichtigen wir den Abtransport und die fachgerechte Entsorgung in der Einschätzung."},{"question":"In welchem Gebiet sind Sie tätig?","answer":"Wir sind in Augsburg und vielen Orten in der Umgebung unterwegs. Die aktuellen Einsatzorte finden Sie direkt auf dieser Seite."}]'::jsonb,
+  true
+)
+where key = 'site' and not (value ? 'faq');
+
+drop policy if exists "Public can read site settings" on public.site_settings;
+create policy "Public can read site settings" on public.site_settings
+for select to anon, authenticated
+using (key = 'site');
+
+drop policy if exists "Staff can update site settings" on public.site_settings;
+create policy "Staff can update site settings" on public.site_settings
+for update to authenticated
+using (key = 'site')
+with check (key = 'site');
+
 -- Storage: Der Bucket wird hier angelegt bzw. auf die benötigten Upload-Regeln
 -- eingestellt. Damit ist die Einrichtung nicht mehr von einem manuellen Schritt
 -- im Storage-Dashboard abhängig.

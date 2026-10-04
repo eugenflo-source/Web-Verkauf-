@@ -510,46 +510,6 @@ address { font-style: normal; }
 .step h3 { font-size: clamp(1.8rem, 1.2rem + 2.2vw, 3rem); font-weight: 800; font-stretch: 70%; text-transform: uppercase; line-height: 1; margin-bottom: 12px; padding-top: 4px; }
 .step p { color: var(--fg-muted); max-width: 30ch; }
 
-/* Referenzen */
-.refs .lead { color: var(--fg-muted); }
-.refs .arrow { color: var(--accent); display: inline-block; }
-.compare {
-  position: relative; aspect-ratio: 16 / 10; overflow: hidden; background: var(--ink-3);
-  user-select: none; touch-action: pan-y; margin-bottom: clamp(20px, 3vw, 40px);
-}
-.compare picture, .compare img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.compare__before { clip-path: inset(0 calc(100% - var(--pos)) 0 0); }
-.compare__handle { position: absolute; top: 0; bottom: 0; left: var(--pos); width: 2px; background: #fff; transform: translateX(-1px); pointer-events: none; }
-.compare__handle span {
-  position: absolute; top: 50%; left: 50%; width: 56px; height: 56px; transform: translate(-50%, -50%);
-  background: var(--blue); display: grid; place-items: center;
-  box-shadow: 0 10px 30px -8px rgb(0 0 0 / .6);
-}
-.compare__handle span::before { content: "‹ ›"; color: #fff; font-weight: 800; font-size: 1.3rem; letter-spacing: .1em; }
-.compare__label { position: absolute; top: 16px; padding: 8px 12px; background: rgb(8 9 11 / .7); color: #fff; }
-.compare__label--l { left: 16px; }
-.compare__label--r { right: 16px; }
-.compare__range { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: ew-resize; margin: 0; }
-.compare__range:focus-visible + * , .compare:has(.compare__range:focus-visible) { outline: 2px solid var(--accent); outline-offset: 4px; }
-
-.gallery {
-  display: grid; grid-auto-flow: column; grid-auto-columns: minmax(240px, 72%);
-  gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 12px;
-  scrollbar-width: thin; scrollbar-color: var(--ink-line) transparent;
-  margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter); scroll-padding-inline: var(--gutter);
-}
-.gallery li { scroll-snap-align: start; }
-.tilt { position: relative; overflow: hidden; aspect-ratio: 9 / 11; background: var(--ink-3); transform-style: preserve-3d; transition: transform .6s var(--ease-out); }
-.tilt img { width: 100%; height: 100%; object-fit: cover; transition: transform .9s var(--ease-out), filter .5s; filter: grayscale(.4); }
-.tilt:hover img { transform: scale(1.06); filter: grayscale(0); }
-.tilt figcaption {
-  position: absolute; left: 0; right: 0; bottom: 0; padding: 40px 16px 16px;
-  background: linear-gradient(transparent, rgb(8 9 11 / .9));
-  font-weight: 700; font-stretch: 85%; text-transform: uppercase; letter-spacing: .02em; color: #fff;
-  display: flex; gap: 10px; align-items: baseline;
-}
-.tilt figcaption .mono { color: var(--blue-bright); }
-
 /* Preis-Orientierung */
 .pricing { background: var(--bg-alt); }
 .pricing__grid { display: grid; gap: clamp(40px, 5vw, 88px); }
@@ -579,15 +539,6 @@ address { font-style: normal; }
 }
 .calc__result small { color: var(--steel); display: block; margin-bottom: 6px; }
 .calc__price { display: block; font-size: clamp(2.6rem, 1.8rem + 3vw, 4.4rem); font-weight: 850; font-stretch: 68%; line-height: 1; font-variant-numeric: tabular-nums; text-transform: uppercase; }
-
-/* Kundenstimmen */
-.reviews__grid { display: grid; gap: clamp(20px, 3vw, 40px); }
-.reviews__head .note { color: var(--fg-muted); margin-top: 18px; font-size: .7rem; }
-.quote { border-top: 2px solid var(--fg); padding-top: 22px; display: flex; flex-direction: column; justify-content: space-between; gap: 24px; }
-.quote p { font-size: clamp(1.25rem, 1rem + 1vw, 1.7rem); font-weight: 600; line-height: 1.3; font-stretch: 92%; }
-.quote--lg p { font-size: clamp(1.6rem, 1.1rem + 2vw, 2.8rem); font-weight: 700; line-height: 1.12; font-stretch: 80%; }
-.quote footer { font-family: var(--mono); font-size: .78rem; letter-spacing: .06em; text-transform: uppercase; color: var(--fg-muted); display: flex; gap: 12px; align-items: center; }
-.stars { color: var(--accent); letter-spacing: .12em; }
 
 /* Einsatzgebiet */
 .area__grid { display: grid; gap: clamp(40px, 5vw, 80px); align-items: center; }
@@ -849,7 +800,6 @@ address { font-style: normal; }
   .stat:first-child { padding-left: 0; }
   .stat:nth-child(3) { padding-left: 20px; }
   .stat:last-child { border-right: 0; }
-  .gallery { grid-auto-columns: minmax(260px, 42%); }
   .area__list { grid-template-columns: repeat(3, 1fr); }
   .footer__cols { grid-template-columns: repeat(4, 1fr); }
 }
@@ -859,8 +809,6 @@ address { font-style: normal; }
   .cta-bar { display: none; }
   .consent { bottom: 24px; left: 24px; right: auto; }
   .hero__bottom { grid-template-columns: 1fr auto; }
-  .reviews__grid { grid-template-columns: repeat(2, 1fr); }
-  .reviews__head, .quote--lg { grid-column: 1 / -1; }
   .footer__cta { grid-template-columns: 1fr auto; }
 }
 
@@ -895,15 +843,8 @@ address { font-style: normal; }
   .step:nth-child(odd) { margin-top: 0; }
   .step:nth-child(3), .step:nth-child(5) { transform: translateY(0); }
 
-  .gallery { grid-auto-flow: row; grid-template-columns: repeat(6, 1fr); overflow: visible; margin-inline: 0; padding-inline: 0; }
-  .gallery li:nth-child(even) { margin-top: 64px; }
-
   .pricing__grid { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); align-items: start; }
   .pricing__intro { position: sticky; top: calc(var(--nav-h) + 32px); }
-
-  .reviews__grid { grid-template-columns: 5fr 4fr 4fr; align-items: stretch; }
-  .reviews__head { grid-column: 1; grid-row: 1 / 3; }
-  .quote--lg { grid-column: 2 / 4; }
 
   .area__grid { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
   .contact__grid { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); align-items: start; }
@@ -930,7 +871,6 @@ address { font-style: normal; }
 /* Hover-Effekte nur für echte Zeigegeräte */
 @media (hover: none) {
   .btn--primary:hover, .btn--ghost:hover, .upload__btn:hover { transform: none; }
-  .tilt img { filter: none; }
 }
 
 /* 16 ─ Reduced Motion & Print ───────────────────────────────────────────── */

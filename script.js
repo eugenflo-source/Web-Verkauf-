@@ -143,12 +143,13 @@
   if (!reduceMotion && "IntersectionObserver" in window) {
     const io = new IntersectionObserver(entries => entries.forEach(en => {
       if (!en.isIntersecting) return;
-      const el = en.target, to = Number(el.dataset.count), dur = 1600, t0 = performance.now();
+      const el = en.target, dur = 1600, t0 = performance.now();
       io.unobserve(el);
-      if (to === 0) return;
+      if (Number(el.dataset.count) === 0) return;
       const step = now => {
         const p = Math.min(1, (now - t0) / dur);
-        el.textContent = Math.round(to * (1 - Math.pow(1 - p, 4)));
+        // Zielwert jedes Frame neu lesen – kann sich durch geladene Website-Einstellungen ändern
+        el.textContent = Math.round(Number(el.dataset.count) * (1 - Math.pow(1 - p, 4)));
         if (p < 1) requestAnimationFrame(step);
       };
       el.textContent = "0";
@@ -249,28 +250,121 @@
     if (open) showFrame(open.dataset.service);
   });
 
-  /* ── Vorher/Nachher-Vergleich ────────────────────────────────────────── */
-  $$("[data-compare]").forEach(cmp => {
-    const range = $(".compare__range", cmp);
-    const set = v => cmp.style.setProperty("--pos", `${v}%`);
-    range?.addEventListener("input", () => set(range.value));
-    set(range?.value || 50);
-  });
-
-  /* ── 3D-Tilt auf Galerie-Karten ──────────────────────────────────────── */
-  if (finePointer && !reduceMotion) {
-    $$("[data-tilt]").forEach(card => {
-      let raf = 0;
-      card.addEventListener("pointermove", e => {
-        cancelAnimationFrame(raf);
-        raf = requestAnimationFrame(() => {
-          const r = card.getBoundingClientRect();
-          const px = (e.clientX - r.left) / r.width - 0.5, py = (e.clientY - r.top) / r.height - 0.5;
-          card.style.transform = `perspective(900px) rotateY(${px * 8}deg) rotateX(${-py * 8}deg) scale(1.02)`;
-        });
-      });
-      card.addEventListener("pointerleave", () => { cancelAnimationFrame(raf); card.style.transform = ""; });
+  /* ── Website-Einstellungen aus Supabase (gepflegt im internen Bereich) ── */
+  // Gleiche Struktur/Validierung wie bisher (Tabelle public.site_settings, key = 'site').
+  // Geladen per schlankem REST-Aufruf – ohne die Supabase-Bibliothek beim Seitenaufruf.
+  const DEFAULT_SITE = {
+    hero: { title_1: "RAUS DAMIT.", title_2: "SAUBER FERTIG.", lead: "Diek Abriss räumt, baut zurück, entsorgt und schafft Platz. Direkt, zuverlässig und mit sauberer Übergabe." },
+    contact: { phone: "0163 1769483", email: "info@diek-abriss.de", whatsapp: "491631769483" },
+    area: { title: "Augsburg & Umgebung", lead: "Wir sind in Augsburg und vielen Orten in der Umgebung unterwegs.", cities: ["Augsburg", "Aichach", "Königsbrunn", "Mering", "Friedberg", "Gersthofen", "Neusäß", "Stadtbergen", "Bobingen", "Kissing", "Diedorf", "Schwabmünchen", "Meitingen", "Landsberg am Lech", "Fürstenfeldbruck", "Dachau", "Wertingen", "Günzburg", "Burgau", "Thannhausen", "Mindelheim"] },
+    faq: [
+      { question: "Welche Arbeiten übernehmen Sie?", answer: "Wir unterstützen bei Abriss, Entrümpelung, Demontage, Rückbau und Entsorgung – für Wohnungen, Häuser, Keller, Gärten, Gewerbe und Baustellen." },
+      { question: "Wie kann ich eine Anfrage stellen?", answer: "Sie können das Anfrageformular nutzen, uns anrufen oder direkt per WhatsApp schreiben. Fotos helfen uns bei einer schnellen Einschätzung." },
+      { question: "Kann ich Fotos mit meiner Anfrage senden?", answer: "Ja. Sie können direkt mit der Kamera ein Foto aufnehmen oder bis zu zehn Fotos aus Ihrer Galerie beziehungsweise Ihren Dateien auswählen." },
+      { question: "Übernehmen Sie auch die Entsorgung?", answer: "Ja. Wenn Sie Entsorgung auswählen, berücksichtigen wir den Abtransport und die fachgerechte Entsorgung in der Einschätzung." },
+      { question: "In welchem Gebiet sind Sie tätig?", answer: "Wir sind in Augsburg und vielen Orten in der Umgebung unterwegs. Die aktuellen Einsatzorte finden Sie direkt auf dieser Seite." },
+    ],
+    pricing: {
+      base: 400,
+      object: { wohnung: 0, keller: 150, haus: 300, gewerbe: 250, garten: 200 },
+      work: { abriss: 0, entsorgung: 0, entruempelung: 0, demontage: 0, rueckbau: 0, komplettpaket: 0 },
+      size: { klein: 250, mittel: 500, gross: 850, sehr_gross: 1300 },
+      disposal: { nein: 0, ja: 180 },
+      waste: { moebel: 0, sperrmuell: 80, holz: 140, bauschutt: 220, gartenabfaelle: 120, gemischt: 250, sonstiges: 0 },
+    },
+  };
+  const clone = o => JSON.parse(JSON.stringify(o));
+  let site = clone(DEFAULT_SITE);
+  const safeText = (v, fb, max = 600) => typeof v === "string" && v.trim() && v.trim().length <= max ? v.trim() : fb;
+  const safePrice = (v, fb) => { const n = Number(v); return Number.isFinite(n) && n >= 0 && n <= 100000 ? n : fb; };
+  function mergeSite(raw) {
+    const m = clone(DEFAULT_SITE);
+    if (!raw || typeof raw !== "object") return m;
+    ["title_1", "title_2", "lead"].forEach(k => { m.hero[k] = safeText(raw.hero?.[k], m.hero[k]); });
+    m.contact.phone = safeText(raw.contact?.phone, m.contact.phone, 40);
+    m.contact.email = safeText(raw.contact?.email, m.contact.email, 160);
+    m.contact.whatsapp = safeText(raw.contact?.whatsapp, m.contact.whatsapp, 30).replace(/[^0-9]/g, "") || m.contact.whatsapp;
+    m.area.title = safeText(raw.area?.title, m.area.title, 100);
+    m.area.lead = safeText(raw.area?.lead, m.area.lead, 400);
+    if (Array.isArray(raw.area?.cities)) { const c = raw.area.cities.map(x => safeText(x, "", 60)).filter(Boolean).slice(0, 60); if (c.length) m.area.cities = c; }
+    if (Array.isArray(raw.faq)) m.faq = raw.faq.map(i => ({ question: safeText(i?.question, "", 180), answer: safeText(i?.answer, "", 900) })).filter(i => i.question && i.answer).slice(0, 15);
+    m.pricing.base = safePrice(raw.pricing?.base, m.pricing.base);
+    ["object", "work", "size", "disposal", "waste"].forEach(g => Object.keys(m.pricing[g]).forEach(k => { m.pricing[g][k] = safePrice(raw.pricing?.[g]?.[k], m.pricing[g][k]); }));
+    return m;
+  }
+  const setText = (el, text) => { if (el && el.textContent !== text) el.textContent = text; };
+  const townKey = name => name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z]/g, "");
+  function applySite() {
+    $$("[data-site]").forEach(el => {
+      const [group, key] = el.dataset.site.split(".");
+      const v = site[group]?.[key];
+      if (typeof v === "string") setText(el, v);
     });
+    // Kontakt-Links überall (Nav, Hero, Kontakt, Footer, Mobile-Leiste, Floating-Button)
+    const tel = `tel:${site.contact.phone.replace(/[^0-9+]/g, "").replace(/^0/, "+49")}`;
+    $$('a[href^="tel:"]').forEach(a => { a.href = tel; if (a.getAttribute("aria-label")?.startsWith("Anrufen")) a.setAttribute("aria-label", `Anrufen: ${site.contact.phone}`); });
+    $$('a[href^="mailto:"]').forEach(a => { a.href = `mailto:${site.contact.email}`; });
+    $$('a[href^="https://wa.me/"]').forEach(a => { a.href = `https://wa.me/${site.contact.whatsapp}`; });
+    $$(".nav__phone span, .mobile-menu__foot a[href^='tel:'], .footer a[href^='tel:'], .faq__head a[href^='tel:']").forEach(el => setText(el, site.contact.phone));
+    $$(".mobile-menu__foot a[href^='mailto:'], .footer a[href^='mailto:']").forEach(el => setText(el, site.contact.email));
+    // Einsatzgebiet: Liste neu aufbauen, Karte nur für gelistete Orte zeigen
+    const list = $("[data-area-list]");
+    if (list) {
+      const current = $$("li", list).map(li => li.textContent).join("|");
+      if (current !== site.area.cities.join("|")) {
+        list.replaceChildren(...site.area.cities.map(c => { const li = document.createElement("li"); li.textContent = c; li.dataset.town = townKey(c); return li; }));
+        bindTowns();
+      }
+      const keys = new Set(site.area.cities.map(townKey));
+      $$(".map__towns [data-town]").forEach(g => { g.style.display = keys.has(g.dataset.town) ? "" : "none"; });
+    }
+    $$("[data-city-count]").forEach(el => { el.dataset.count = String(site.area.cities.length); setText(el, String(site.area.cities.length)); });
+    // FAQ (sichtbar + strukturierte Daten)
+    const faqList = $("[data-faq]");
+    if (faqList) {
+      const current = $$("summary span", faqList).map(x => x.textContent).join("|");
+      if (current !== site.faq.map(f => f.question).join("|") || $$(".faq__a p", faqList).map(x => x.textContent).join("|") !== site.faq.map(f => f.answer).join("|")) {
+        faqList.replaceChildren(...site.faq.map(f => {
+          const d = document.createElement("details"), sm = document.createElement("summary"), q = document.createElement("span"), i = document.createElement("i"), a = document.createElement("div"), p = document.createElement("p");
+          q.textContent = f.question; i.setAttribute("aria-hidden", "true"); sm.append(q, i);
+          a.className = "faq__a"; p.textContent = f.answer; a.append(p); d.append(sm, a);
+          return d;
+        }));
+      }
+      const section = $("#faq");
+      if (section) section.hidden = !site.faq.length;
+    }
+    const ld = $("#ld-json");
+    if (ld) {
+      try {
+        const data = JSON.parse(ld.textContent);
+        const faqNode = data["@graph"].find(n => n["@type"] === "FAQPage");
+        if (faqNode) faqNode.mainEntity = site.faq.map(f => ({ "@type": "Question", name: f.question, acceptedAnswer: { "@type": "Answer", text: f.answer } }));
+        const biz = data["@graph"].find(n => n["@id"]?.endsWith("#business"));
+        if (biz) {
+          biz.telephone = biz.contactPoint.telephone = site.contact.phone.replace(/^0/, "+49 ");
+          biz.email = biz.contactPoint.email = site.contact.email;
+          biz.areaServed = site.area.cities.map(name => ({ "@type": "City", name }));
+        }
+        ld.textContent = JSON.stringify(data);
+      } catch (e) { /* JSON-LD bleibt unverändert */ }
+    }
+    estimate();
+  }
+  async function loadSite() {
+    if (!cfg.supabaseUrl || !cfg.supabaseAnonKey || !window.fetch) return;
+    try {
+      const res = await fetch(`${cfg.supabaseUrl}/rest/v1/site_settings?key=eq.site&select=value`, {
+        headers: { apikey: cfg.supabaseAnonKey, Authorization: `Bearer ${cfg.supabaseAnonKey}`, Accept: "application/json" },
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const rows = await res.json();
+      if (!rows?.[0]?.value) return;
+      site = mergeSite(rows[0].value);
+      applySite();
+    } catch (err) {
+      console.warn("Website-Einstellungen konnten nicht geladen werden – Standardwerte bleiben aktiv.", err);
+    }
   }
 
   /* ── Preis-Orientierung ──────────────────────────────────────────────── */
@@ -278,15 +372,23 @@
   const priceEl = $("[data-price]");
   const wasteGroup = $("[data-calc-waste]");
   let shownPrice = 650;
-  const val = name => Number($(`input[name="${name}"]:checked`, calc)?.value || 0);
+  // Preis einer Auswahl: zuerst aus den Website-Einstellungen (Supabase), sonst Standardwert im HTML
+  const picked = name => $(`input[name="${name}"]:checked`, calc);
+  const val = name => {
+    const el = picked(name);
+    if (!el) return 0;
+    const configured = site.pricing?.[el.dataset.priceGroup]?.[el.dataset.priceKey];
+    return Number.isFinite(configured) ? configured : Number(el.value) || 0;
+  };
+  // „Mit Entsorgung“ wird über den Schlüssel erkannt – funktioniert auch bei 0 € Zuschlag
+  const withDisposal = () => picked("disposal")?.dataset.priceKey === "ja";
   function estimate() {
     if (!calc) return;
-    const withDisposal = val("disposal") !== 0;
-    if (wasteGroup) wasteGroup.hidden = !withDisposal;
-    // Gleiche Formel wie bisher: 400 € Basis + Objekt + Aufwand + Entsorgung (+ Material)
-    const n = 400 + val("obj") + val("size") + val("disposal") + (withDisposal ? val("waste") : 0);
-    const target = Math.round(n / 10) * 10;
-    animatePrice(target);
+    const disp = withDisposal();
+    if (wasteGroup) wasteGroup.hidden = !disp;
+    const base = Number.isFinite(site.pricing?.base) ? site.pricing.base : 400;
+    const n = base + val("obj") + val("work") + val("size") + val("disposal") + (disp ? val("waste") : 0);
+    animatePrice(Math.round(n / 10) * 10);
   }
   function animatePrice(to) {
     if (!priceEl) return;
@@ -309,7 +411,7 @@
     if (!form || !calc) return;
     const work = $('input[name="work"]:checked', calc)?.dataset.label;
     const obj = $('input[name="obj"]:checked', calc)?.dataset.label;
-    const disp = val("disposal") !== 0;
+    const disp = withDisposal();
     const waste = $('input[name="waste"]:checked', calc)?.dataset.label;
     const setSelect = (sel, text) => { const o = [...sel.options].find(o => o.text === text || o.value === text); if (o) sel.value = o.value; };
     if (work) setSelect(form.elements.service, work);
@@ -320,33 +422,38 @@
   });
 
   /* ── Einsatzgebiet: Liste ↔ Karte verknüpfen ─────────────────────────── */
-  const towns = $$(".area__list [data-town]");
-  const dots = $$(".map__towns [data-town]");
-  const hl = (key, on) => {
-    towns.forEach(t => t.classList.toggle("is-hl", on && t.dataset.town === key));
-    dots.forEach(d => d.classList.toggle("is-hl", on && d.dataset.town === key));
-  };
-  [...towns, ...dots].forEach(el => {
-    el.addEventListener("pointerenter", () => hl(el.dataset.town, true));
-    el.addEventListener("pointerleave", () => hl(el.dataset.town, false));
-  });
+  // Liste und Karte teilen sich die Schlüssel aus townKey() (z. B. „Neusäß“ → neusa)
+  function bindTowns() {
+    const towns = $$(".area__list [data-town]");
+    const dots = $$(".map__towns [data-town]");
+    const key = el => el.dataset.town;
+    const hl = (k, on) => [...towns, ...dots].forEach(t => t.classList.toggle("is-hl", on && key(t) === k));
+    [...towns, ...dots].forEach(el => {
+      if (el.dataset.bound) return;
+      el.dataset.bound = "1";
+      el.addEventListener("pointerenter", () => hl(key(el), true));
+      el.addEventListener("pointerleave", () => hl(key(el), false));
+    });
+  }
+  bindTowns();
 
   /* ── FAQ: weiches Öffnen/Schließen von <details> ─────────────────────── */
-  $$("[data-faq] details").forEach(d => {
-    const summary = $("summary", d), body = $(".faq__a", d);
-    if (!summary || !body || reduceMotion || !body.animate) return;
-    summary.addEventListener("click", e => {
-      e.preventDefault();
-      if (d.open) {
-        const a = body.animate([{ height: `${body.offsetHeight}px`, opacity: 1 }, { height: "0px", opacity: 0 }], { duration: 380, easing: "cubic-bezier(.65,0,.35,1)" });
-        a.onfinish = () => { d.open = false; if (hasGsap) window.ScrollTrigger.refresh(); };
-      } else {
-        d.open = true;
-        const h = body.offsetHeight;
-        const a = body.animate([{ height: "0px", opacity: 0 }, { height: `${h}px`, opacity: 1 }], { duration: 480, easing: "cubic-bezier(.16,1,.3,1)" });
-        a.onfinish = () => { if (hasGsap) window.ScrollTrigger.refresh(); };
-      }
-    });
+  // Delegiert, damit auch aus Supabase nachgeladene Einträge animiert werden
+  $("[data-faq]")?.addEventListener("click", e => {
+    const summary = e.target.closest("summary");
+    const d = summary?.parentElement;
+    const body = d && $(".faq__a", d);
+    if (!body || reduceMotion || !body.animate) return;
+    e.preventDefault();
+    if (d.open) {
+      const a = body.animate([{ height: `${body.offsetHeight}px`, opacity: 1 }, { height: "0px", opacity: 0 }], { duration: 380, easing: "cubic-bezier(.65,0,.35,1)" });
+      a.onfinish = () => { d.open = false; if (hasGsap) window.ScrollTrigger.refresh(); };
+    } else {
+      d.open = true;
+      const h = body.offsetHeight;
+      const a = body.animate([{ height: "0px", opacity: 0 }, { height: `${h}px`, opacity: 1 }], { duration: 480, easing: "cubic-bezier(.16,1,.3,1)" });
+      a.onfinish = () => { if (hasGsap) window.ScrollTrigger.refresh(); };
+    }
   });
 
   /* ── Formular: Validierung, Fotos, Supabase-Upload ───────────────────── */
@@ -358,7 +465,7 @@
   const formDisposal = $("#f-disposal"), formWaste = $("[data-form-waste]");
   const PHOTO_TYPES = new Set(["image/jpeg", "image/png", "image/webp", "image/heic", "image/heif"]);
   const MAX_PHOTO_SIZE = 10 * 1024 * 1024;
-  const LOCAL_KEY = "diekAbrissRequests";
+  const MAX_PHOTOS = 10;
   let selectedPhotos = [];
   let previewUrls = [];
 
@@ -372,6 +479,7 @@
     if (!list?.length) return;
     const rejected = [];
     for (const f of list) {
+      if (selectedPhotos.length >= MAX_PHOTOS) { rejected.push(`maximal ${MAX_PHOTOS} Fotos möglich`); break; }
       const isHeicByName = /\.(heic|heif)$/i.test(f.name) && !f.type;
       if (!PHOTO_TYPES.has(f.type) && !isHeicByName) { rejected.push(`${f.name}: kein unterstütztes Fotoformat`); continue; }
       if (f.size > MAX_PHOTO_SIZE) { rejected.push(`${f.name}: größer als 10 MB`); continue; }
@@ -382,7 +490,7 @@
   }
   function renderPhotos() {
     previewUrls.forEach(u => URL.revokeObjectURL(u)); previewUrls = [];
-    if (fileNames) fileNames.textContent = selectedPhotos.length ? `${selectedPhotos.length} Foto(s) ausgewählt` : "JPG, PNG, WebP oder HEIC · je max. 10 MB";
+    if (fileNames) fileNames.textContent = selectedPhotos.length ? `${selectedPhotos.length} von ${MAX_PHOTOS} Fotos ausgewählt` : `Max. ${MAX_PHOTOS} Fotos · JPG, PNG, WebP oder HEIC · je max. 10 MB`;
     if (!photoPreview) return;
     photoPreview.innerHTML = "";
     selectedPhotos.forEach((file, i) => {
@@ -516,10 +624,7 @@
         const { error } = await sb.from("contact_requests").insert(r);
         if (error) throw new Error(`Anfrage konnte nicht gespeichert werden: ${error.message}`);
       } else {
-        // Demo-Modus ohne Supabase: lokal speichern (sichtbar in anfragen.html)
-        const all = JSON.parse(store.get(LOCAL_KEY) || "[]");
-        all.unshift({ ...r, id: requestId, photos: selectedPhotos.map(f => f.name) });
-        store.set(LOCAL_KEY, JSON.stringify(all));
+        throw new Error("Die Anfrage kann zurzeit nicht gesendet werden. Bitte kontaktieren Sie uns per Telefon oder WhatsApp.");
       }
       setStatus("✓ Anfrage erfolgreich übermittelt. Wir melden uns schnellstmöglich.", "ok");
       trackEvent("generate_lead", { form: "anfrage", service: r.service });
@@ -567,6 +672,8 @@
       trackEvent("contact_click", { method: type });
     }));
   }
+
+  loadSite();
 
   /* ── Kleinkram ───────────────────────────────────────────────────────── */
   $$("[data-year]").forEach(el => { el.textContent = new Date().getFullYear(); });
