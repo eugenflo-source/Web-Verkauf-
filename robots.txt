@@ -1,0 +1,9 @@
+# robots.txt – diek-abriss.de
+User-agent: *
+Allow: /
+Disallow: /anfragen.html
+Disallow: /config.js
+Disallow: /supabase.sql
+Disallow: /SETUP-SUPABASE.md
+
+Sitemap: https://diek-abriss.de/sitemap.xml
